@@ -1,23 +1,55 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from "react";
 
 function App() {
+  const [counter, setCounter] = useState(0);
+  const [showError, setShowError] = useState(false);
+  const [counterArray, setCounterArray] = useState([]);
+
+  const increaseValue = () => {
+    if(showError){
+      setShowError(false);
+    }
+    setCounter(counter + 1);
+    const newArray = [...counterArray];
+    const findInArray = newArray.find(el => el === counter+1);
+    if(!findInArray) newArray.push(counter+1)
+    setCounterArray(newArray);
+  }
+  
+
+  const decreaseValue = () => {
+    if(counter === 0) {
+      setShowError(true);
+      return;
+    }
+    setCounter(counter - 1);
+    const newArray = [...counterArray];
+    if(!newArray.includes(counter-1)) newArray.push(counter-1);
+    setCounterArray(newArray);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+    <div>
+      <div style={{
+        display: 'flex'
+      }}>
+        <button onClick={decreaseValue}>
+          -
+        </button>
+        <p style={{ maxHeight: '5px', margin: 0}}>
+          {counter}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <button onClick={increaseValue}>
+          +
+        </button>
+      </div>
+      {showError && (
+        <div className='card-containter'>
+          Value can not be lower than zero
+        </div>
+      )}
+      {counterArray.map(el => <div>{el} is the number</div>)}
     </div>
   );
 }
